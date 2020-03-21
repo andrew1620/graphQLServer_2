@@ -1,0 +1,29 @@
+{
+  "name": "graphqlServer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "server": "cd server && nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@cdm-logger/server": "^5.0.5",
+    "amqplib": "^0.5.5",
+    "apollo-datasource-rest": "^0.7.0",
+    "apollo-server": "^2.10.1",
+    "bunyan": "^1.8.12",
+    "graphql": "^14.6.0",
+    "graphql-rabbitmq-subscriptions": "^1.1.0",
+    "graphql-subscriptions": "^1.1.0",
+    "graphql-type-json": "^0.3.1",
+    "node-fetch": "^2.6.0",
+    "subscriptions-transport-ws": "^0.9.16"
+  },
+  "devDependencies": {
+    "babel-plugin-import": "^1.13.0"
+  }
+}
