@@ -4,11 +4,10 @@ const typeDefs = gql`
   type Query {
     layers: [Layer]!
     layer(id: ID!): Layer
-    me: User
   }
 
   type Layer {
-    id: ID!
+    id: ID
     name: String
     objects: Objects
     services: [Service]
@@ -46,7 +45,7 @@ const typeDefs = gql`
   }
 
   type Objects {
-    endpont: String
+    endpoint: String
     types: [TypesItem]
   }
   type TypesItem {
@@ -54,30 +53,12 @@ const typeDefs = gql`
     format: JSON
   }
 
-  type User {
-    id: ID!
-    userName: String!
-    email: String!
-    password: String!
-    layers: [Layer]
-  }
-
   type Mutation {
-    saveLayer(layerId: ID!): LayerUpdateResponse!
-    deleteLayer(layerId: ID!): LayerUpdateResponse!
-    login(email: String): String # login token
-    addLayer(layer: JSON): Layer
     changeLayer(layer: JSON): Layer
   }
 
-  type LayerUpdateResponse {
-    success: Boolean!
-    message: String
-    layers: [Layer]
-  }
-
   type Subscription {
-    layerAdded(repoFullName: String!): Layer
+    layerChanged: Layer
   }
 `;
 

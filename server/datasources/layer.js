@@ -57,30 +57,18 @@ class LayerAPI extends RESTDataSource {
   }
 
   async getAllLayers() {
-    // const query =
-    //   "query?format=geojson&starttime=2014-01-01&endtime=2014-01-02";
-    // const response = await this.get(query);
-    // return Array.isArray(response.features)
-    //   ? //Должен возвращать массив слоев, пока сделал заглушку в виде массива с 1 слоем
-    //     // response.features.map(layer => this.layerReducer(layer))
-    //     [this.layerReducer(response.features[0])]
-    //   : [];
-
+    //Должен возвращать массив слоев, пока сделал заглушку в виде массива с 1 слоем
     // // return [this.layerReducer(getData())];
-    return [this.layerReducer(testDB[0])];
+    return testDB;
   }
 
-  changeLayer(data) {
-    testDB[0] = data;
-    // return [this.layerReducer(testDB[0])];
-  }
-
-  addLayer(data) {
-    senData(data);
-    return this.layerReducer("Successful");
+  changeLayer({ layer }) {
+    testDB[0] = { ...testDB[0], ...layer };
+    return testDB[0];
   }
 
   layerReducer(layer) {
+    //Как обычный reducer, можно пропустить через него данные как через фильтр и поменять то, что необходимо
     return {
       id: layer.id,
       name: "layer 1",
