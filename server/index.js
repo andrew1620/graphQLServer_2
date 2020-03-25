@@ -30,7 +30,11 @@ const httpServer = http.createServer(app);
 server.installSubscriptionHandlers(httpServer);
 
 httpServer.listen(PORT, () => {
-  console.log(`server ready at http://localhost:${PORT}${server.graphqlPath}`);
+  console.log(
+    `server ready at http://localhost:${PORT}${
+      server.graphqlPath
+    } ${new Date().toLocaleTimeString()} `
+  );
   console.log(
     `subscriptions ready at http://localhost:${PORT}${server.subscriptionsPath}`
   );

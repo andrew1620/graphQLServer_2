@@ -17,8 +17,9 @@ module.exports = {
   },
   Subscription: {
     layerChanged: {
-      // Additional event labels can be passed to asyncIterator creation
-      subscribe: () => pubsub.asyncIterator([LAYER_CHANGED])
+      subscribe: () => {
+        return pubsub.asyncIterator(LAYER_CHANGED);
+      }
     }
   }
   // Subscription: {
