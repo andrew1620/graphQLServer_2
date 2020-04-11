@@ -13,25 +13,25 @@ const testLayer = {
         draw: {
           polyline: {
             shapeOptions: {
-              color: "blue"
+              color: "blue",
             },
-            showLength: true
+            showLength: true,
           },
           polygon: {
             shapeOptions: {
-              color: "blue"
-            }
+              color: "blue",
+            },
           },
           rectangle: false,
           circle: false,
           marker: false,
-          circlemarker: false
+          circlemarker: false,
         },
         edit: {
-          edit: false
-        }
-      }
-    }
+          edit: false,
+        },
+      },
+    },
   ],
   objects: {
     endpoint: "real_data:detect_info_2-line",
@@ -41,12 +41,12 @@ const testLayer = {
         format: {
           rectangle: [
             [300, 100],
-            [350, 200]
-          ]
-        }
-      }
-    ]
-  }
+            [350, 200],
+          ],
+        },
+      },
+    ],
+  },
 };
 const testDB = [testLayer]; //Тестовые данные
 
@@ -62,57 +62,33 @@ class LayerAPI extends RESTDataSource {
     return testDB;
   }
 
-  changeLayer({ layer }) {
-    testDB[0] = { ...testDB[0], ...layer };
+  changeLayer(layer) {
+    console.log("layerFetched --- ", layer);
+
+    testDB[0] = { ...testDB[0], ...this.layerReducer(layer) };
+
+    console.log("changed testDB --- ", testDB[0].objects.types[1].format.rectangle);
+
     return testDB[0];
   }
 
   layerReducer(layer) {
     //Как обычный reducer, можно пропустить через него данные как через фильтр и поменять то, что необходимо
+    // return {
+    //   id: testDB[0].id,
+    //   name: `Обработанный через редьюсер ${layer.name}`,
+    //   services: [...testDB[0].services],
+    //   objects: {
+    //     endpoint: "real_data:detect_info_2-line",
+    //     types: [...testDB[0].objects.types, ...layer.objects.types],
+    //   },
+    // };
     return {
-      id: layer.id,
-      name: "layer 1",
-      services: [
-        {
-          service: "editable",
-          options: {
-            draw: {
-              polyline: {
-                shapeOptions: {
-                  color: "blue"
-                },
-                showLength: true
-              },
-              polygon: {
-                shapeOptions: {
-                  color: "blue"
-                }
-              },
-              rectangle: false,
-              circle: false,
-              marker: false,
-              circlemarker: false
-            },
-            edit: {
-              edit: false
-            }
-          }
-        }
-      ],
+      ...testDB[0],
       objects: {
-        endpoint: "real_data:detect_info_2-line",
-        types: [
-          {
-            id: "1",
-            format: {
-              rectangle: [
-                [300, 100],
-                [350, 200]
-              ]
-            }
-          }
-        ]
-      }
+        ...testDB[0].objects,
+        types: [...testDB[0].objects.types, ...layer.objects.types],
+      },
     };
   }
 }
