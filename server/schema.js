@@ -55,6 +55,8 @@ const typeDefs = gql`
 
   type Mutation {
     changeLayer(layer: JSON): Layer
+    deleteLayer(id: ID): Layer
+    changeObjectBorders(objectData: JSON): Layer
   }
 
   type Subscription {

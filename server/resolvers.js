@@ -20,6 +20,22 @@ module.exports = {
       //спросить нужно ли возвращать рез-т функции
       // return dataSources.layerAPI.changeLayer(data.layer);
     },
+    async changeObjectBorders(_, data, { dataSources }) {
+      dataSources.layerAPI.changeObjectBorders(data.objectData);
+      const updatedLayer = await dataSources.layerAPI.getAllLayers();
+      pubsub.publish(LAYER_CHANGED, { layerChanged: updatedLayer[0] });
+
+      return updatedLayer[0];
+    },
+    async deleteLayer(_, data, { dataSources }) {
+      console.log('resolver"s data --- ', data);
+      dataSources.layerAPI.deleteLayer(data.id);
+      const updatedLayer = await dataSources.layerAPI.getAllLayers();
+
+      pubsub.publish(LAYER_CHANGED, { layerChanged: updatedLayer[0] });
+
+      return updatedLayer[0];
+    },
   },
   Subscription: {
     layerChanged: {
