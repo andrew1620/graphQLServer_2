@@ -14,7 +14,7 @@
     "@cdm-logger/server": "^5.0.5",
     "amqplib": "^0.5.5",
     "apollo-datasource-rest": "^0.7.0",
-    "apollo-server": "^2.10.1",
+    "apollo-server": "^2.14.2",
     "bunyan": "^1.8.12",
     "graphql": "^14.6.0",
     "graphql-rabbitmq-subscriptions": "^1.1.0",
