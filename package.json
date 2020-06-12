@@ -1,11 +1,11 @@
 {
-  "name": "graphqlServer",
-  "version": "1.0.0",
+  "name": "dodo-gql-geodata-api",
+  "version": "1.1.0",
+  "private": true,
   "description": "",
   "main": "index.js",
   "scripts": {
-    "server": "cd server && nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./src/index.js"
   },
   "keywords": [],
   "author": "",
@@ -22,8 +22,5 @@
     "graphql-type-json": "^0.3.1",
     "node-fetch": "^2.6.0",
     "subscriptions-transport-ws": "^0.9.16"
-  },
-  "devDependencies": {
-    "babel-plugin-import": "^1.13.0"
   }
 }

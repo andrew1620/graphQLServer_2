@@ -11,17 +11,17 @@ const typeDefJSON = `
 scalar JSON
 `;
 const resolverJSON = {
-  JSON: GraphQLJSON
+  JSON: GraphQLJSON,
 };
 
-const PORT = 3006;
+const PORT = process.env.PORT || 3000;
 const app = express();
 const server = new ApolloServer({
   typeDefs: [typeDefs, typeDefJSON],
   resolvers: [resolvers, resolverJSON],
   dataSources: () => ({
-    layerAPI: new LayerAPI()
-  })
+    layerAPI: new LayerAPI(),
+  }),
 });
 
 server.applyMiddleware({ app });

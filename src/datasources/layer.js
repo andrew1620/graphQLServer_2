@@ -108,7 +108,9 @@ class LayerAPI extends RESTDataSource {
           ...testDB[0].objects.types,
           {
             ...layer.objects.types[0],
-            id: +testDB[0].objects.types[testDB[0].objects.types.length - 1].id + 1,
+            id:
+              +testDB[0].objects.types[testDB[0].objects.types.length - 1].id +
+              1,
           },
         ],
       },
@@ -116,7 +118,10 @@ class LayerAPI extends RESTDataSource {
   }
 
   changeObjectBorders(objectData) {
-    testDB[0] = { ...testDB[0], ...this.changeObjectBordersReducer(objectData) };
+    testDB[0] = {
+      ...testDB[0],
+      ...this.changeObjectBordersReducer(objectData),
+    };
     console.log("after changing object borders --- ", testDB[0].objects);
   }
 
@@ -127,7 +132,10 @@ class LayerAPI extends RESTDataSource {
         ...testDB[0].objects,
         types: testDB[0].objects.types.map((object) => {
           if (object.id === +id)
-            return { ...object, format: { ...object.format, rectangle: newBounds } };
+            return {
+              ...object,
+              format: { ...object.format, rectangle: newBounds },
+            };
           else return object;
         }),
       },
@@ -148,6 +156,7 @@ class LayerAPI extends RESTDataSource {
   changeOrderInfo(info) {
     testDB[0] = this.changeOrderInfoReducer(info);
   }
+
   changeOrderInfoReducer(info) {
     console.log(info);
     return { ...testDB[0], orderInfo: { ...testDB[0].orderInfo, ...info } };
