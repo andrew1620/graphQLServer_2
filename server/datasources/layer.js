@@ -56,6 +56,18 @@ const testLayer = {
       },
     ],
   },
+  orderInfo: {
+    id: "robot1",
+    name: "vehicle 1",
+    batteryCharge: "82",
+    lastActivity: "19:23",
+    orderData: {
+      id: "1",
+      orderNumber: "order 1",
+      tableNumber: "table 1",
+      orderDescription: 'It"s an order description',
+    },
+  },
 };
 const testDB = [testLayer]; //Тестовые данные
 
@@ -131,6 +143,14 @@ class LayerAPI extends RESTDataSource {
         types: testDB[0].objects.types.filter((object) => object.id !== +id),
       },
     };
+  }
+
+  changeOrderInfo(info) {
+    testDB[0] = this.changeOrderInfoReducer(info);
+  }
+  changeOrderInfoReducer(info) {
+    console.log(info);
+    return { ...testDB[0], orderInfo: { ...testDB[0].orderInfo, ...info } };
   }
 }
 

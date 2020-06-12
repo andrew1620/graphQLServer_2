@@ -11,6 +11,7 @@ const typeDefs = gql`
     name: String
     objects: Objects
     services: [Service]
+    orderInfo: OrderInfo
   }
   type Service {
     service: String
@@ -53,10 +54,25 @@ const typeDefs = gql`
     format: JSON
   }
 
+  type OrderData {
+    id: String
+    orderNumber: String
+    tableNumber: String
+    orderDescription: String
+  }
+  type OrderInfo {
+    id: String
+    name: String
+    batteryCharge: String
+    lastActivity: String
+    orderData: OrderData
+  }
+
   type Mutation {
     changeLayer(layer: JSON): Layer
     deleteLayer(id: ID): Layer
     changeObjectBorders(objectData: JSON): Layer
+    changeOrderInfo(info: JSON): Layer
   }
 
   type Subscription {

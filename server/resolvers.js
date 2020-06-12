@@ -36,6 +36,13 @@ module.exports = {
 
       return updatedLayer[0];
     },
+    async changeOrderInfo(_, data, { dataSources }) {
+      dataSources.layerAPI.changeOrderInfo(data.info);
+      const updatedLayer = await dataSources.layerAPI.getAllLayers();
+      console.log(updatedLayer);
+      pubsub.publish(LAYER_CHANGED, { layerChanged: updatedLayer[0] });
+      return updatedLayer[0];
+    },
   },
   Subscription: {
     layerChanged: {
