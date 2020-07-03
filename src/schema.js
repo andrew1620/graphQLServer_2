@@ -1,4 +1,4 @@
-const { gql } = require("apollo-server");
+const { gql } = require('apollo-server');
 
 const typeDefs = gql`
   type Query {
@@ -9,7 +9,7 @@ const typeDefs = gql`
   type Layer {
     id: ID
     name: String
-    objects: Objects
+    objects: [Object]
     services: [Service]
     orderInfo: OrderInfo
   }
@@ -45,9 +45,9 @@ const typeDefs = gql`
     edit: Boolean
   }
 
-  type Objects {
-    endpoint: String
-    types: [TypesItem]
+  type Object {
+    id: ID!
+    data: JSON
   }
   type TypesItem {
     id: String
@@ -69,6 +69,10 @@ const typeDefs = gql`
   }
 
   type Mutation {
+    createObject(id: ID!, object: JSON!): Boolean
+    updateObjects(id: ID!, objects: JSON!): Boolean
+    removeObjects(id: ID!, objects: JSON!): Boolean
+
     changeLayer(layer: JSON): Layer
     deleteLayer(id: ID): Layer
     changeObjectBorders(objectData: JSON): Layer
@@ -76,7 +80,7 @@ const typeDefs = gql`
   }
 
   type Subscription {
-    layerChanged: Layer
+    layerChanged(id: ID!): Layer
   }
 `;
 

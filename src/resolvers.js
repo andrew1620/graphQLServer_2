@@ -1,53 +1,58 @@
-const { PubSub } = require("apollo-server");
+const { PubSub, withFilter } = require('apollo-server');
 const pubsub = new PubSub();
 
-LAYER_CHANGED = "LAYER_CHANGED";
+LAYER_CHANGED = 'LAYER_CHANGED';
 
 module.exports = {
   Query: {
-    layers: (_, __, { dataSources }) => dataSources.layerAPI.getAllLayers(),
-    layer: (_, { id }, { dataSources }) => dataSources.layerAPI.getLayerById({ layerId: id }),
+    layer: async (_, { id }, { models: { layerData } }) => {
+      const getting = await layerData.getLayer(id);
+      return { ...getting };
+    },
+    layers: async (_, __, { models: { layerData } }) => {
+      const getting = await layerData.getLayers();
+      return [...getting];
+    },
   },
   Mutation: {
-    async changeLayer(_, data, { dataSources }) {
-      dataSources.layerAPI.changeLayer(data.layer);
-      const updatedLayer = await dataSources.layerAPI.getAllLayers();
-
-      pubsub.publish(LAYER_CHANGED, { layerChanged: updatedLayer[0] });
-
-      return updatedLayer[0];
-
-      //спросить нужно ли возвращать рез-т функции
-      // return dataSources.layerAPI.changeLayer(data.layer);
+    createObject: async (_, { id, object }, { models: { layerData } }) => {
+      console.log(`create object at layer ${id}`);
+      await layerData.createObject(id, object);
+      pubsub.publish(LAYER_CHANGED, { id });
+      return true;
     },
-    async changeObjectBorders(_, data, { dataSources }) {
-      dataSources.layerAPI.changeObjectBorders(data.objectData);
-      const updatedLayer = await dataSources.layerAPI.getAllLayers();
-      pubsub.publish(LAYER_CHANGED, { layerChanged: updatedLayer[0] });
-
-      return updatedLayer[0];
+    updateObjects: async (_, { id, objects }, { models: { layerData } }) => {
+      console.log(`update objects at layer ${id}`);
+      await layerData.updateObjects(id, objects);
+      pubsub.publish(LAYER_CHANGED, { id });
+      return true;
     },
-    async deleteLayer(_, data, { dataSources }) {
-      console.log('resolver"s data --- ', data);
-      dataSources.layerAPI.deleteLayer(data.id);
-      const updatedLayer = await dataSources.layerAPI.getAllLayers();
-
-      pubsub.publish(LAYER_CHANGED, { layerChanged: updatedLayer[0] });
-
-      return updatedLayer[0];
+    removeObjects: async (_, { id, objects }, { models: { layerData } }) => {
+      console.log(`remove objects at layer ${id}`);
+      await layerData.removeObjects(id, objects);
+      pubsub.publish(LAYER_CHANGED, { id });
+      return true;
     },
-    async changeOrderInfo(_, data, { dataSources }) {
-      dataSources.layerAPI.changeOrderInfo(data.info);
-      const updatedLayer = await dataSources.layerAPI.getAllLayers();
-      console.log(updatedLayer);
-      pubsub.publish(LAYER_CHANGED, { layerChanged: updatedLayer[0] });
-      return updatedLayer[0];
-    },
+
+    // changeOrderInfo: async (_, data, { dataSources }) => {
+    //   dataSources.layerAPI.changeOrderInfo(data.info);
+    //   const updatedLayer = await dataSources.layerAPI.getAllLayers();
+    //   console.log(updatedLayer);
+    //   pubsub.publish(LAYER_CHANGED, { layerChanged: updatedLayer[0] });
+    //   return updatedLayer[0];
+    // },
   },
   Subscription: {
     layerChanged: {
-      subscribe: () => {
-        return pubsub.asyncIterator(LAYER_CHANGED);
+      subscribe: withFilter(
+        () => pubsub.asyncIterator([LAYER_CHANGED]),
+        (payload, { id }) => {
+          return payload.id === id;
+        },
+      ),
+      resolve: async ({ id }, params, { models: { layerData } }) => {
+        const getting = await layerData.getLayer(id);
+        return { ...getting };
       },
     },
   },
