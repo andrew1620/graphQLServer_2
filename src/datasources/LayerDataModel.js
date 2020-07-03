@@ -11,7 +11,7 @@ const queues = {
 
 class LayerDataModel {
   constructor(options = {}) {
-    const { connection = 'amqp://rabbitmq' } = options;
+    const { connection = 'amqp://localhost' } = options;
 
     this.connection = amqp.connect(connection);
   }
