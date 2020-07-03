@@ -1,0 +1,6 @@
+{
+  "port": 3020,
+  "amqp": {
+    "connection": "amqp://localhost"
+  }
+}
