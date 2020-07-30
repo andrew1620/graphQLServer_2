@@ -1,5 +1,4 @@
 {
-  "port": 15031,
   "amqp": {
     "connection": "amqp://admin:admin@rabbitmq"
   }
