@@ -13,7 +13,7 @@ class LayerDataModel {
   constructor(options = {}) {
     const { connection = 'amqp://localhost' } = options;
 
-    this.connection = amqp.connect(connection);
+    this.url = connection;
   }
 
   async getLayer(id) {
@@ -58,7 +58,7 @@ class LayerDataModel {
   }
 
   async getData({ queue, message = '' }) {
-    const connection = await this.connection;
+    const connection = await amqp.connect(this.url);
     const channel = await connection.createChannel();
     const { queue: retryQueue } = await channel.assertQueue('', { exclusive: true });
 
@@ -85,18 +85,19 @@ class LayerDataModel {
         channel.sendToQueue(queue, packed, { correlationId, replyTo: retryQueue });
       });
     };
-
     const response = await request();
 
+    connection.close();
     return response;
   }
 
   async sendData({ queue, message = '' }) {
-    const connection = await this.connection;
+    const connection = await amqp.connect(this.url);
     const channel = await connection.createChannel();
     channel.assertQueue(queue, { durable: false });
     const packed = Buffer.from(JSON.stringify(message));
     channel.sendToQueue(queue, packed);
+    connection.close();
   }
 }
 
