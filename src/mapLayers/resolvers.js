@@ -1,15 +1,15 @@
-const { PubSub, withFilter } = require('apollo-server');
+const { PubSub, withFilter } = require('apollo-server-express');
 const pubsub = new PubSub();
 
 LAYER_CHANGED = 'LAYER_CHANGED';
 
-module.exports = {
+const resolvers = {
   Query: {
-    layer: async (_, { id }, { models: { layerData } }) => {
+    getMapLayer: async (_, { id }, { models: { layerData } }) => {
       const getting = await layerData.getLayer(id);
       return { ...getting };
     },
-    layers: async (_, __, { models: { layerData } }) => {
+    getMapLayers: async (_, __, { models: { layerData } }) => {
       const getting = await layerData.getLayers();
       return [...getting];
     },
@@ -33,14 +33,6 @@ module.exports = {
       pubsub.publish(LAYER_CHANGED, { id });
       return true;
     },
-
-    // changeOrderInfo: async (_, data, { dataSources }) => {
-    //   dataSources.layerAPI.changeOrderInfo(data.info);
-    //   const updatedLayer = await dataSources.layerAPI.getAllLayers();
-    //   console.log(updatedLayer);
-    //   pubsub.publish(LAYER_CHANGED, { layerChanged: updatedLayer[0] });
-    //   return updatedLayer[0];
-    // },
   },
   Subscription: {
     layerChanged: {
@@ -56,14 +48,8 @@ module.exports = {
       },
     },
   },
-  // Subscription: {
-  //   layerAdded: {
-  //     resolve: payload => {
-  //       return {
-  //         customData: payload
-  //       };
-  //     },
-  //     subscribe: () => pubsub.asyncIterator("layerAdded")
-  //   }
-  // }
+};
+
+module.exports = {
+  resolvers,
 };

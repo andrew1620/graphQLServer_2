@@ -97,7 +97,6 @@ class LayerDataModel {
     channel.assertQueue(queue, { durable: false });
     const packed = Buffer.from(JSON.stringify(message));
     channel.sendToQueue(queue, packed);
-    connection.close();
   }
 }
 
