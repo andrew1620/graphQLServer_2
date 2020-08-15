@@ -2,6 +2,8 @@ const amqp = require('amqplib');
 const { AMQPPubSub } = require('graphql-amqp-subscriptions');
 const { v4: uuid } = require('uuid');
 
+const { DataModel } = require('./DataModel');
+
 // mockRobot = {
 //   id: '1',
 //   name: uuid(),
@@ -42,11 +44,10 @@ mockRobot3 = {
 };
 mockRobots = [mockRobot1, mockRobot2, mockRobot3];
 
-class RobotDataModel {
+class RobotDataModel extends DataModel {
   constructor(options = {}) {
-    const { connection = 'amqp://localhost' } = options;
+    super(options);
 
-    this.url = connection;
     this.subscriptions = {};
   }
 
