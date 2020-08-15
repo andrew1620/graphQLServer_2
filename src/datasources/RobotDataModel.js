@@ -2,12 +2,20 @@ const amqp = require('amqplib');
 const { AMQPPubSub } = require('graphql-amqp-subscriptions');
 const { v4: uuid } = require('uuid');
 
-// mockRobot = { id: 1, name: 'platform', position: { x: 1.727336, y: -2.248892 } };
+// mockRobot = {
+//   id: '1',
+//   name: uuid(),
+//   position: { x: 0, y: 0 },
+//   telemetry: {
+//     battery: '0.75352',
+//     lastActivity: '10.11.20 10:48:25',
+//   },
+// };
 // mockRobots = [mockRobot];
 
 mockRobot1 = {
-  id: uuid(),
-  name: 'platform_1',
+  id: '1',
+  name: uuid(),
   position: { x: 1.727336, y: -2.248892 },
   telemetry: {
     battery: '0.75352',
@@ -15,8 +23,8 @@ mockRobot1 = {
   },
 };
 mockRobot2 = {
-  id: uuid(),
-  name: 'platform_2',
+  id: '2',
+  name: uuid(),
   position: { x: 3.727336, y: -2.248892 },
   telemetry: {
     battery: '0.75352',
@@ -24,8 +32,8 @@ mockRobot2 = {
   },
 };
 mockRobot3 = {
-  id: uuid(),
-  name: 'platform_3',
+  id: '3',
+  name: uuid(),
   position: { x: 5.727336, y: -2.248892 },
   telemetry: {
     battery: '0.75352',
