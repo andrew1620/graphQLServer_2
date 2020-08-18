@@ -51,4 +51,4 @@ class DataModel {
   }
 }
 
-module.exports = { DataModel };
+module.exports = DataModel;

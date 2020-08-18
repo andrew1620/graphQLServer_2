@@ -1,7 +1,7 @@
 const amqp = require('amqplib');
 const { v4: uuid } = require('uuid');
 
-const { DataModel } = require('./DataModel');
+const DataModel = require('./DataModel');
 
 const queues = {
   GET_LAYER: 'get_geodata_layer',

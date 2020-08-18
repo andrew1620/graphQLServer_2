@@ -2,7 +2,7 @@ const amqp = require('amqplib');
 const { AMQPPubSub } = require('graphql-amqp-subscriptions');
 const { v4: uuid } = require('uuid');
 
-const { DataModel } = require('./DataModel');
+const DataModel = require('./DataModel');
 
 // mockRobot = {
 //   id: '1',
