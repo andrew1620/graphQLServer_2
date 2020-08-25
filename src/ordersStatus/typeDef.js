@@ -12,9 +12,11 @@ const typeDef = gql`
 
   type Order {
     id: ID!
-    number: Int!
+    number: Int
+    status: Int
+    table: ID
     processed: ID
-    time: String!
+    time: String
   }
 `;
 

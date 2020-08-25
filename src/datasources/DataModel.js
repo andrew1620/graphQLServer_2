@@ -10,6 +10,7 @@ class DataModel {
 
   async getData({ queue, message = '' }) {
     const connection = await amqp.connect(this.url);
+
     const channel = await connection.createChannel();
     const { queue: retryQueue } = await channel.assertQueue('', { exclusive: true });
 
@@ -19,14 +20,10 @@ class DataModel {
 
         channel.consume(
           retryQueue,
-          (message) => {
-            if (message.properties.correlationId == correlationId) {
-              try {
-                const result = JSON.parse(message.content.toString());
-                resolve(result || null);
-              } catch (error) {
-                reject(error);
-              }
+          (answer) => {
+            if (answer.properties.correlationId == correlationId) {
+              const result = JSON.parse(answer.content.toString());
+              resolve(result || null);
             }
           },
           { noAck: true },
@@ -34,12 +31,20 @@ class DataModel {
 
         const packed = Buffer.from(JSON.stringify(message));
         channel.sendToQueue(queue, packed, { correlationId, replyTo: retryQueue });
+
+        setTimeout(() => reject(new Error('Not answer')), 5000);
       });
     };
-    const response = await request();
 
-    connection.close();
-    return response;
+    try {
+      const response = await request();
+      return response;
+    } catch (error) {
+      console.log(error.message);
+      throw error;
+    } finally {
+      connection.close();
+    }
   }
 
   async sendData({ queue, message = '' }) {

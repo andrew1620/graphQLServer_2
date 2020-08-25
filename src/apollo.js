@@ -28,6 +28,9 @@ module.exports = {
     const robotModel = new RobotDataModel({ connection: config.amqp.connection });
     const orderModel = new OrderDataModel({ connection: config.amqp.connection });
 
+    // const robotModel = new RobotDataModel({ connection: 'amqp://admin:admin@192.168.0.17' });
+    // const orderModel = new OrderDataModel({ connection: 'amqp://admin:admin@192.168.0.17' });
+
     const server = await Promise.all([robotModel.subcribePositions()]).then(
       ([updateRobotPosition]) => {
         return new ApolloServer({

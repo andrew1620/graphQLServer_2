@@ -44,6 +44,10 @@ mockRobot3 = {
 };
 mockRobots = [mockRobot1, mockRobot2, mockRobot3];
 
+const queues = {
+  GET_ROBOTS: 'rpc_robots_db',
+};
+
 class RobotDataModel extends DataModel {
   constructor(options = {}) {
     super(options);
@@ -57,6 +61,8 @@ class RobotDataModel extends DataModel {
 
   async getRobots() {
     return mockRobots;
+
+    // return await this.getData({ queue: queues.GET_ROBOTS });
   }
 
   async subcribePositions() {

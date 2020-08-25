@@ -12,6 +12,7 @@ const typeDef = gql`
 
   type Robot {
     id: ID!
+    activity: Boolean
     name: String
     position: JSON
     telemetry: JSON
