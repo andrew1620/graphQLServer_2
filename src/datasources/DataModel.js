@@ -32,7 +32,7 @@ class DataModel {
         const packed = Buffer.from(JSON.stringify(message));
         channel.sendToQueue(queue, packed, { correlationId, replyTo: retryQueue });
 
-        setTimeout(() => reject(new Error('Not answer')), 5000);
+        setTimeout(() => reject(new Error(`No answer for request ${queue}`)), 5000);
       });
     };
 

@@ -1,23 +1,12 @@
 const amqp = require('amqplib');
 const { AMQPPubSub } = require('graphql-amqp-subscriptions');
-const { v4: uuid } = require('uuid');
 
 const DataModel = require('./DataModel');
 
-// mockRobot = {
-//   id: '1',
-//   name: uuid(),
-//   position: { x: 0, y: 0 },
-//   telemetry: {
-//     battery: '0.75352',
-//     lastActivity: '10.11.20 10:48:25',
-//   },
-// };
-// mockRobots = [mockRobot];
-
 mockRobot1 = {
-  id: '1',
-  name: uuid(),
+  robot_id: '1',
+  name: 'delivery-order-platform',
+  is_active: true,
   position: { x: 1.727336, y: -2.248892 },
   telemetry: {
     battery: '0.75352',
@@ -25,8 +14,9 @@ mockRobot1 = {
   },
 };
 mockRobot2 = {
-  id: '2',
-  name: uuid(),
+  robot_id: '2',
+  name: 'delivery-order-platform',
+  is_active: true,
   position: { x: 3.727336, y: -2.248892 },
   telemetry: {
     battery: '0.75352',
@@ -34,8 +24,9 @@ mockRobot2 = {
   },
 };
 mockRobot3 = {
-  id: '3',
-  name: uuid(),
+  robot_id: '3',
+  name: 'delivery-order-platform',
+  is_active: true,
   position: { x: 5.727336, y: -2.248892 },
   telemetry: {
     battery: '0.75352',
@@ -55,17 +46,28 @@ class RobotDataModel extends DataModel {
     this.subscriptions = {};
   }
 
-  async getRobot(id) {
-    return mockRobots.find(({ id: stored }) => stored === id);
+  parseRobotStatus({ robot_id, name = 'delivery-order-platform', lastActivity = null }) {
+    return { id: robot_id, name, lastActivity };
   }
 
   async getRobots() {
-    return mockRobots;
+    // const data = mockRobots;
 
-    // return await this.getData({ queue: queues.GET_ROBOTS });
+    const data = await this.getData({ queue: queues.GET_ROBOTS });
+
+    if (!data) throw Error('Not getting data from api request');
+
+    const time = new Date();
+    return data.map((robot) => {
+      const { is_active, ...robotStatus } = robot;
+      return this.parseRobotStatus({
+        lastActivity: is_active ? time.toISOString() : null,
+        ...robotStatus,
+      });
+    });
   }
 
-  async subcribePositions() {
+  async subscribePositions() {
     if (!this.subscriptions.positions) {
       this.subscriptions.positions = await amqp.connect(this.url).then((conn) => {
         return new AMQPPubSub({
@@ -77,7 +79,7 @@ class RobotDataModel extends DataModel {
               durable: false,
             },
           },
-        }).asyncIterator('coordinates');
+        });
       });
     }
     return this.subscriptions.positions;

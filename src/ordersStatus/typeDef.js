@@ -6,13 +6,13 @@ const typeDef = gql`
     getOrders: [Order]!
   }
 
-  # extend type Subscription {
-  #   updatedOrderStatus(id: ID!): Order
-  # }
+  extend type Subscription {
+    orderStatusChanged(id: ID!): Order
+    ordersStatusListChanged: [Order]!
+  }
 
   type Order {
     id: ID!
-    number: Int
     status: Int
     table: ID
     processed: ID
