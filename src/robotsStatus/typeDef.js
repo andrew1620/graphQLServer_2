@@ -2,7 +2,6 @@ const { gql } = require('apollo-server-express');
 
 const typeDef = gql`
   extend type Query {
-    getRobot(id: ID!): Robot
     getRobots: [Robot]!
   }
 
@@ -12,6 +11,7 @@ const typeDef = gql`
 
   type Robot {
     id: ID!
+    lastActivity: String
     name: String
     position: JSON
     telemetry: JSON
