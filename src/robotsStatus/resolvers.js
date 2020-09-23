@@ -1,9 +1,11 @@
-const { PubSub, withFilter } = require('apollo-server-express');
-
-let pubsub = new PubSub();
+const { withFilter } = require('apollo-server-express');
 
 const resolvers = {
   Query: {
+    getRobot: async (_, { id }, { models: { robotData } }) => {
+      const getting = await robotData.getRobot(id);
+      return { ...getting };
+    },
     getRobots: async (_, __, { models: { robotData } }) => {
       const getting = await robotData.getRobots();
       return [...getting];
@@ -18,7 +20,6 @@ const resolvers = {
       ),
       resolve: async (payload, params, { models: { robotData } }) => {
         const { id, x, y } = payload;
-        console.log(`Send position: ${x} ${y}`);
         return {
           id,
           position: {

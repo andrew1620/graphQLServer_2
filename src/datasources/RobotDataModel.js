@@ -50,6 +50,16 @@ class RobotDataModel extends DataModel {
     return { id: robot_id, name, lastActivity };
   }
 
+  async getRobot(id) {
+    const robots = await this.getRobots();
+    const data = robots.find((robot) => robot.id === id);
+
+    if (!data) return null;
+
+    const { position = null, ...robotStatus } = data;
+    return { position, ...robotStatus };
+  }
+
   async getRobots() {
     // const data = mockRobots;
 
