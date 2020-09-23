@@ -1,4 +1,5 @@
 {
+  "tms": "tms-geodata",
   "amqp": {
     "connection": "amqp://admin:admin@rabbitmq"
   }

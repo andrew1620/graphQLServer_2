@@ -1,5 +1,6 @@
 {
   "port": 15031,
+  "tms": "http://localhost:15032",
   "amqp": {
     "connection": "amqp://admin:admin@localhost"
   }
