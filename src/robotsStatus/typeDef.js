@@ -2,6 +2,7 @@ const { gql } = require('apollo-server-express');
 
 const typeDef = gql`
   extend type Query {
+    getRobot(id: ID!): Robot
     getRobots: [Robot]!
   }
 

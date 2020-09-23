@@ -5,6 +5,7 @@ const config = require('config');
 const mapLayers = require('./mapLayers');
 const robotsStatus = require('./robotsStatus');
 const ordersStatus = require('./ordersStatus');
+const mapConfig = require('./mapConfig');
 
 const LayerDataModel = require('./dataSources/LayerDataModel');
 const RobotDataModel = require('./dataSources/RobotDataModel');
@@ -28,6 +29,7 @@ module.exports = {
     const robotModel = new RobotDataModel({ connection: config.amqp.connection });
     const orderModel = new OrderDataModel({ connection: config.amqp.connection });
 
+    // const layerModel = new LayerDataModel({ connection: 'amqp://admin:admin@95.181.230.223' });
     // const robotModel = new RobotDataModel({ connection: 'amqp://admin:admin@95.181.230.223' });
     // const orderModel = new OrderDataModel({ connection: 'amqp://admin:admin@95.181.230.223' });
 
@@ -37,8 +39,20 @@ module.exports = {
       orderModel.subscribeUpdateOrdersStatusList(),
     ]).then(([robotPositionChanged, orderStatusChanged, ordersStatusListChanged]) => {
       return new ApolloServer({
-        typeDefs: [typeDef, mapLayers.typeDef, robotsStatus.typeDef, ordersStatus.typeDef],
-        resolvers: [resolvers, mapLayers.resolvers, robotsStatus.resolvers, ordersStatus.resolvers],
+        typeDefs: [
+          typeDef,
+          mapLayers.typeDef,
+          robotsStatus.typeDef,
+          ordersStatus.typeDef,
+          mapConfig.typeDef,
+        ],
+        resolvers: [
+          resolvers,
+          mapLayers.resolvers,
+          robotsStatus.resolvers,
+          ordersStatus.resolvers,
+          mapConfig.resolvers,
+        ],
         context: (connection) => {
           const context = {
             models: {
