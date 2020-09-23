@@ -1,6 +1,3 @@
-const amqp = require('amqplib');
-const { v4: uuid } = require('uuid');
-
 const DataModel = require('./DataModel');
 
 const queues = {
