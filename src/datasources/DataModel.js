@@ -18,11 +18,19 @@ class DataModel {
       return new Promise((resolve, reject) => {
         const correlationId = uuid();
 
+        const waitingResponse = setTimeout(
+          () => reject(new Error(`No answer for request ${queue}`)),
+          5000,
+        );
+
         channel.consume(
           retryQueue,
           (answer) => {
             if (answer.properties.correlationId == correlationId) {
               const result = JSON.parse(answer.content.toString());
+
+              if (waitingResponse) clearTimeout(waitingResponse);
+
               resolve(result || null);
             }
           },
@@ -31,8 +39,6 @@ class DataModel {
 
         const packed = Buffer.from(JSON.stringify(message));
         channel.sendToQueue(queue, packed, { correlationId, replyTo: retryQueue });
-
-        setTimeout(() => reject(new Error(`No answer for request ${queue}`)), 5000);
       });
     };
 
