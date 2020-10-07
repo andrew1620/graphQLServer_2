@@ -34,48 +34,52 @@ module.exports = {
     // const orderModel = new OrderDataModel({ connection: 'amqp://admin:admin@95.181.230.223' });
 
     const server = await Promise.all([
+      layerModel.subscribeUpdateLayerData(),
       robotModel.subscribePositions(),
       orderModel.subscribeUpdateOrderStatus(),
       orderModel.subscribeUpdateOrdersStatusList(),
-    ]).then(([robotPositionChanged, orderStatusChanged, ordersStatusListChanged]) => {
-      return new ApolloServer({
-        typeDefs: [
-          typeDef,
-          mapLayers.typeDef,
-          robotsStatus.typeDef,
-          ordersStatus.typeDef,
-          mapConfig.typeDef,
-        ],
-        resolvers: [
-          resolvers,
-          mapLayers.resolvers,
-          robotsStatus.resolvers,
-          ordersStatus.resolvers,
-          mapConfig.resolvers,
-        ],
-        context: (connection) => {
-          const context = {
-            models: {
-              layerData: layerModel,
-              robotData: robotModel,
-              orderData: orderModel,
-            },
-            subscriptions: {
-              robotPositionChanged,
-              orderStatusChanged,
-              ordersStatusListChanged,
-            },
-          };
-          if (connection) {
-            return {
-              ...connection.context,
-              ...context,
+    ]).then(
+      ([layerDataUpdated, robotPositionChanged, orderStatusChanged, ordersStatusListChanged]) => {
+        return new ApolloServer({
+          typeDefs: [
+            typeDef,
+            mapLayers.typeDef,
+            robotsStatus.typeDef,
+            ordersStatus.typeDef,
+            mapConfig.typeDef,
+          ],
+          resolvers: [
+            resolvers,
+            mapLayers.resolvers,
+            robotsStatus.resolvers,
+            ordersStatus.resolvers,
+            mapConfig.resolvers,
+          ],
+          context: (connection) => {
+            const context = {
+              models: {
+                layerData: layerModel,
+                robotData: robotModel,
+                orderData: orderModel,
+              },
+              subscriptions: {
+                layerDataUpdated,
+                robotPositionChanged,
+                orderStatusChanged,
+                ordersStatusListChanged,
+              },
             };
-          }
-          return context;
-        },
-      });
-    });
+            if (connection) {
+              return {
+                ...connection.context,
+                ...context,
+              };
+            }
+            return context;
+          },
+        });
+      },
+    );
 
     server.applyMiddleware({ app });
     server.installSubscriptionHandlers(httpServer);
