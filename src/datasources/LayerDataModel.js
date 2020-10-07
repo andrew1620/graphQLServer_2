@@ -1,3 +1,6 @@
+const amqp = require('amqplib');
+const { AMQPPubSub } = require('graphql-amqp-subscriptions');
+
 const DataModel = require('./DataModel');
 
 const queues = {
@@ -11,6 +14,8 @@ const queues = {
 class LayerDataModel extends DataModel {
   constructor(options = {}) {
     super(options);
+
+    this.subscriptions = {};
   }
 
   async getLayer(id) {
@@ -52,6 +57,25 @@ class LayerDataModel extends DataModel {
         removed: objects,
       },
     });
+  }
+
+  async subscribeUpdateLayerData() {
+    if (!this.subscriptions.updateLayerData) {
+      this.subscriptions.updateLayerData = await amqp.connect(this.url).then((conn) => {
+        return new AMQPPubSub({
+          connection: conn,
+          exchange: {
+            name: 'updated_geodata_layer',
+            type: 'fanout',
+            options: {
+              durable: false,
+              autoDelete: false,
+            },
+          },
+        });
+      });
+    }
+    return this.subscriptions.updateLayerData;
   }
 }
 
