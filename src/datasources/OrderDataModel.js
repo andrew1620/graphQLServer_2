@@ -3,25 +3,50 @@ const { AMQPPubSub } = require('graphql-amqp-subscriptions');
 
 const DataModel = require('./DataModel');
 
-mockOrder1 = {
-  order: '1',
-  status: 3,
-  robot_id: '1',
-  time: '10:48:34',
-};
-mockOrder2 = {
-  order: '2',
-  status: 1,
-  robot_id: '2',
-  time: '10:55:25',
-};
-mockOrder3 = {
-  order: '3',
-  status: 2,
-  robot_id: '3',
-  time: '10:32:12',
-};
-mockOrders = [mockOrder1, mockOrder2, mockOrder3];
+mockOrders = [
+  {
+    order: '1',
+    status: 5,
+    robot_id: '1',
+    time: '10:48:34',
+  },
+  {
+    order: '2',
+    status: 5,
+    robot_id: '2',
+    time: '10:55:25',
+  },
+  {
+    order: '3',
+    status: 5,
+    robot_id: '3',
+    time: '10:32:12',
+  },
+  {
+    order: '4',
+    status: 5,
+    robot_id: '3',
+    time: '10:30:02',
+  },
+  {
+    order: '5',
+    status: 5,
+    robot_id: '3',
+    time: '10:25:55',
+  },
+  {
+    order: '6',
+    status: 5,
+    robot_id: '3',
+    time: '10:23:41',
+  },
+  {
+    order: '7',
+    status: 5,
+    robot_id: '3',
+    time: '10:15:08',
+  },
+];
 
 const queues = { GET_ORDERS: 'rpc_find_order_for_interface' };
 const requestOrdersActions = { GET_ORDER: 1, GET_ORDERS: 2 };
@@ -43,12 +68,12 @@ class OrderDataModel extends DataModel {
   }
 
   async getOrder(id) {
-    // const data = [mockOrders.find(({ order: stored }) => stored === id)];
+    const data = [mockOrders.find(({ order: stored }) => stored === id)];
 
-    const data = await this.getData({
-      queue: queues.GET_ORDERS,
-      message: { key: requestOrdersActions.GET_ORDERS, order: id },
-    });
+    // const data = await this.getData({
+    //   queue: queues.GET_ORDERS,
+    //   message: { key: requestOrdersActions.GET_ORDERS, order: id },
+    // });
 
     if (!data[0]) throw Error('Not getting data from api request');
 
@@ -56,12 +81,12 @@ class OrderDataModel extends DataModel {
   }
 
   async getOrders() {
-    // const data = mockOrders;
+    const data = mockOrders;
 
-    const data = await this.getData({
-      queue: queues.GET_ORDERS,
-      message: { key: requestOrdersActions.GET_ORDER },
-    });
+    // const data = await this.getData({
+    //   queue: queues.GET_ORDERS,
+    //   message: { key: requestOrdersActions.GET_ORDER },
+    // });
 
     if (!data) throw Error('Not getting data from api request');
 
