@@ -29,10 +29,6 @@ module.exports = {
     const robotModel = new RobotDataModel({ connection: config.amqp.connection });
     const orderModel = new OrderDataModel({ connection: config.amqp.connection });
 
-    // const layerModel = new LayerDataModel({ connection: 'amqp://admin:admin@95.181.230.223' });
-    // const robotModel = new RobotDataModel({ connection: 'amqp://admin:admin@95.181.230.223' });
-    // const orderModel = new OrderDataModel({ connection: 'amqp://admin:admin@95.181.230.223' });
-
     const server = await Promise.all([
       layerModel.subscribeUpdateLayerData(),
       robotModel.subscribePositions(),
